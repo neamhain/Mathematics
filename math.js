@@ -114,7 +114,7 @@
 			return Mathematics.Arcsinh(1 / X);
 		},
 		Arccoth: function(X) {
-			return return Mathematics.Arctanh(1 / X);
+			return Mathematics.Arctanh(1 / X);
 		},
 
 		// Exponent and logarithm
