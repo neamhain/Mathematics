@@ -219,7 +219,7 @@
 			return [(P[0] + Q[0]) / 2, (P[1] + Q[1]) / 2];
 		},
 
-		// Linear algebra - Matrix
+		// Matrix
 		Matrix: function(Values) {
 			var Matrix = function(Values) {
 				var ValueSet = Values, Rows = Values.length, Columns = Values[0].length;
@@ -241,7 +241,7 @@
 					}
 
 					return Mathematics.Matrix(Vector);
-				}
+				};
 
 				this.ColumnVector = function(Column) {
 					var Vector = [];
@@ -251,7 +251,7 @@
 					}
 
 					return Mathematics.Matrix(Vector);
-				}
+				};
 
 				this.Minor = function(Row, Column) {
 					var Minor = [];
@@ -273,11 +273,11 @@
 					}
 
 					return Mathematics.Matrix(Minor);
-				}
+				};
 
 				this.Cofactor = function(Row, Column) {
 					return Mathematics.Power(-1, Row + Column) * this.Minor(Row, Column).Determinant();
-				}
+				};
 
 				this.Adjugate = function() {
 					var Matrix = [];
@@ -291,7 +291,7 @@
 					}
 
 					return Mathematics.Matrix(Matrix).Transpose();
-				}
+				};
 
 				this.ScalarMultiply = function(Scalar) {
 					for(var RowIterator = 0; RowIterator < Rows; RowIterator++) {
@@ -299,7 +299,7 @@
 							ValueSet[RowIterator][ColumnIterator] *= Scalar;
 						}
 					}
-				}
+				};
 
 				this.Transpose = function() {
 					var Values = [];
@@ -313,7 +313,7 @@
 					}
 
 					return Mathematics.Matrix(Values);
-				}
+				};
 
 				this.Multiply = function(Matrix) {
 					if(Columns == Matrix.Rows) {
@@ -333,7 +333,7 @@
 
 						return Mathematics.Matrix(Induction);
 					}
-				}
+				};
 
 				if(Columns == Rows) {
 					this.Trace = function(Matrix) {
@@ -367,7 +367,7 @@
 							InverseMatrix.ScalarMultiply(1 / this.Determinant());
 
 							return InverseMatrix;
-						}
+						};
 					}
 				}
 
@@ -384,7 +384,7 @@
 
 							return SerialArray;
 						}
-					}
+					};
 				}
 
 				this.Stringify = function() {
@@ -401,13 +401,54 @@
 					}
 
 					return MatrixString;
-				}
+				};
 			};
 
 			return new Matrix(Values);
 		},
 
-		// Linear algebra - Linear transformation
+		// Complex numbers
+		Complex: function(A, B) {
+			var Complex = function(A, B) {
+				var RealPart = A ? A : 0, ImaginaryPart = B ? B : 0;
+
+				this.RealPart = function() {
+					return RealPart;
+				};
+
+				this.ImaginaryPart = function() {
+					return ImaginaryPart;
+				};
+
+				this.Add = function(Complex) {
+					return Mathematics.Complex(RealPart + Complex.RealPart(), ImaginaryPart + Complex.ImaginaryPart());
+				};
+
+				this.Subtract = function(Complex) {
+					return Mathematics.Complex(RealPart - Complex.RealPart(), ImaginaryPart - Complex.ImaginaryPart());
+				};
+
+				this.Multiply = function(Complex) {
+					return Mathematics.Complex(RealPart * Complex.RealPart - ImaginaryPart * Complex.ImaginaryPart, RealPart * Complex.ImaginaryPart + ImaginaryPart * Complex.RealPart);
+				};
+
+				this.Divide = function(Complex) {
+					return Mathematics.Complex((RealPart * Complex.RealPart + ImaginaryPart * Complex.ImaginaryPart) / (Mathematics.Square(Complex.RealPart) + Mathematics.Square(Complex.ImaginaryPart)), (ImaginaryPart * Complex.RealPart - RealPart * Complex.ImaginaryPart) / (Mathematics.Square(Complex.RealPart) + Mathematics.Square(Complex.ImaginaryPart)));
+				};
+
+				this.AbsoluteValue = function() {
+					return Mathematics.Distance([RealPart, ImaginaryPart], [0, 0]);
+				};
+
+				this.Conjugate = function() {
+					return Mathematics.Complex(RealPart, -ImaginaryPart);
+				};
+			};
+
+			return new Complex(A, B);
+		},
+
+		// Linear transformation
 		RotateTransform: function(Angle, Point) {
 			return Mathematics.Matrix([[Mathematics.Cos(Angle), -Mathematics.Sin(Angle)], [Mathematics.Sin(Angle), Mathematics.Cos(Angle)]]).Multiply(Mathematics.Matrix([[Point[0]], [Point[1]]])).ColumnVector(1).Serialize();
 		},
