@@ -13,13 +13,14 @@
 	"use strict";
 
 	var Mathematics = {
+		// Essential algebric functions
 		Power: Math.pow,
-		Root: function(Value, Powered) {
-			if(!Powered) {
-				Powered = 2;
+		Root: function(X, N) {
+			if(!N) {
+				N = 2;
 			}
 
-			return Mathematics.Power(Value, 1 / Powered);
+			return Mathematics.Power(X, 1 / N);
 		},
 		Square: function(X) {
 			return Mathematics.Power(X, 2);
@@ -27,6 +28,32 @@
 		Cube: function(X) {
 			return Mathematics.Power(X, 3);
 		},
+		Abs: Math.abs,
+		Sign: function(X) {
+			return X == 0 ? X : X / Mathematics.Abs(X);
+		},
+		Floor: Math.floor,
+		Ceil: Math.ceil,
+		Round: Math.round,
+		GCD: function(A, B) {
+			A = Mathematics.Abs(A);
+			B = Mathematics.Abs(B);
+
+			if(B > A) {
+				return Mathematics.GCD(B, A);
+			}
+
+			if(A % B == 0) {
+				return B;
+			}
+
+			return Mathematics.GCD(B, A % B);
+		},
+		LCM: function(A, B) {
+			return A * B / Mathematics.GCD(A, B);
+		},
+
+		// Trigonal functions
 		Sin: Math.sin,
 		Cos: Math.cos,
 		Tan: Math.tan,
@@ -51,6 +78,8 @@
 		Arccot: function(X) {
 			return 1 / Math.atan(X);
 		},
+
+		// Hyperbolic functions
 		Sinh: function(X) {
 			return (Mathematics.Exp(X) - Mathematics.Exp(-X)) / 2;
 		},
@@ -89,17 +118,33 @@
 				return Mathematics.Ln((X + 1) / (X - 1)) / 2;
 			}
 		},
+
+		// Exponent and logarithm
 		Exp: Math.exp,
 		Log: function(X) {
 			return Math.log(X) / Math.log(10);
 		},
 		Ln: Math.log,
-		Abs: Math.abs,
-		Sign: function(X) {
-			return X == 0 ? X : X / Mathematics.Abs(X);
+
+		// Sequence (Progression)
+		AP: function(A, D) {
+			return function(N) {
+				return A + (N - 1) * D;
+			};
 		},
-		Floor: Math.floor,
-		Ceil: Math.ceil,
+		GP: function(A, R) {
+			return function(N) {
+				return A * Mathematics.Power(A, R - 1);
+			};
+		},
+		HP: function(A, D) {
+			return function(N) {
+				return 1 / Mathematics.ArithmeticProgression(A, D)(N);
+			};
+		},
+		Fibonacci: function(N) {
+			return Mathematics.Round((1 / Mathematics.Root(5)) * (Mathematics.Power((1 + Mathematics.Root(5)) / 2, N) - Mathematics.Power((1 - Mathematics.Root(5)) / 2, N)));
+		},
 		Sum: function(From, To, Fx) {
 			var Summation = 0;
 
@@ -134,6 +179,8 @@
 
 			return Production;
 		},
+
+		// Extra functions
 		Zeta: function(S) {
 			if(S > 1) {
 				return S == Infinity ? 1 : Mathematics.Sum(1, Infinity, function(N) { return 1 / Mathematics.Power(N, S) });	
@@ -154,12 +201,16 @@
 		isInteger: function(X) {
 			return X % 1 == 0;
 		},
+
+		// Unit conversion
 		Radian: function(Degree) {
 			return Degree / 180 * Mathematics.PI;
 		},
 		Degree: function(Radian) {
 			return Radian * 180 / Mathematics.PI;
 		},
+
+		// Linear algebra - Matrix
 		Matrix: function(Values) {
 			var Matrix = function(Values) {
 				var ValueSet = Values, Rows = Values.length, Columns = Values[0].length;
@@ -340,15 +391,19 @@
 						MatrixString += RowIterator == Rows ? ']' : '\n';
 					}
 
-					console.log(MatrixString);
+					return MatrixString;
 				}
 			};
 
 			return new Matrix(Values);
 		},
+
+		// Linear algebra - Linear transformation
 		RotateTransform: function(Angle, Point) {
 			return Mathematics.Matrix([[Mathematics.Cos(Angle), -Mathematics.Sin(Angle)], [Mathematics.Sin(Angle), Mathematics.Cos(Angle)]]).Multiply(Mathematics.Matrix([[Point[0]], [Point[1]]])).ColumnVector(1).Serialize();
 		},
+
+		// Permutation and combination
 		Permutate: function(N, R) {
 			return Mathematics.Factorial(N) / Mathematics.Factorial(N - R);
 		},
@@ -357,10 +412,12 @@
 		}
 	};
 
+	// Mathematical constants
 	Mathematics.E = Mathematics.Sum(0, Infinity, function(N) { return 1 / Mathematics.Factorial(N) });
 	Mathematics.PI = Mathematics.Sum(0, Infinity, function(K) { return Mathematics.Power(16, -K) * (4 / (8 * K + 1) - 2 / (8 * K + 4) - 1 / (8 * K + 5) - 1 / (8 * K + 6)) });
 	Mathematics.PHI = (1 + Mathematics.Root(5)) / 2;
 
+	// (Extend) Linear algebra - Matrix
 	Mathematics.Matrix.Identity = function(Size) {
 		var Values = [];
 
