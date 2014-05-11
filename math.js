@@ -70,13 +70,13 @@
 		Arccos: Math.acos,
 		Arctan: Math.atan,
 		Arcsec: function(X) {
-			return 1 / Math.acos(X);
+			return Math.acos(1 / X);
 		},
 		Arccsc: function(X) {
-			return 1 / Math.asin(X);	
+			return Math.asin(1 / X);
 		},
 		Arccot: function(X) {
-			return 1 / Math.atan(X);
+			return Math.atan(1 / X);
 		},
 
 		// Hyperbolic functions
@@ -108,15 +108,13 @@
 			return Mathematics.Abs(X) < 1 ? Mathematics.Ln((X + 1) / (1 - X)) / 2 : undefined;
 		},
 		Arcsech: function(X) {
-			return 0 < X && X <= 1 ? Mathematics.Ln(1 / X + Mathematics.Root(1 - Mathematics.Square(X)) / X) : undefined;
+			return Mathematics.Arccosh(1 / X);
 		},
 		Arccsch: function(X) {
-			return X != 0 ? Mathematics.Ln(1 / X + Mathematics.Root(1 + Mathematics.Square(X)) / Mathematics.Abs(X)) : undefined;
+			return Mathematics.Arcsinh(1 / X);
 		},
 		Arccoth: function(X) {
-			if(Mathematics.Abs(X) > 1) {
-				return Mathematics.Ln((X + 1) / (X - 1)) / 2;
-			}
+			return return Mathematics.Arctanh(1 / X);
 		},
 
 		// Exponent and logarithm
@@ -201,6 +199,9 @@
 		isInteger: function(X) {
 			return X % 1 == 0;
 		},
+		isCoprime: function(A, B) {
+			return Mathematics.GCD(A, B) == 1;
+		},
 
 		// Unit conversion
 		Radian: function(Degree) {
@@ -208,6 +209,14 @@
 		},
 		Degree: function(Radian) {
 			return Radian * 180 / Mathematics.PI;
+		},
+
+		// Point
+		Distance: function(P, Q) {
+			return Mathematics.Root(Mathematics.Square(Q[0] - P[0]) + Mathematics.Square(Q[1] - P[1]));
+		},
+		Midpoint: function(P, Q) {
+			return [(P[0] + Q[0]) / 2, (P[1] + Q[1]) / 2];
 		},
 
 		// Linear algebra - Matrix
