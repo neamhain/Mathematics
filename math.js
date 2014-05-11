@@ -410,7 +410,7 @@
 		// Complex numbers
 		Complex: function(A, B) {
 			var Complex = function(A, B) {
-				var RealPart = A ? A : 0, ImaginaryPart = B ? B : 0;
+				var RealPart = A, ImaginaryPart = B;
 
 				this.RealPart = function() {
 					return RealPart;
@@ -429,11 +429,11 @@
 				};
 
 				this.Multiply = function(Complex) {
-					return Mathematics.Complex(RealPart * Complex.RealPart - ImaginaryPart * Complex.ImaginaryPart, RealPart * Complex.ImaginaryPart + ImaginaryPart * Complex.RealPart);
+					return Mathematics.Complex(RealPart * Complex.RealPart() - ImaginaryPart * Complex.ImaginaryPart(), RealPart * Complex.ImaginaryPart() + ImaginaryPart * Complex.RealPart());
 				};
 
 				this.Divide = function(Complex) {
-					return Mathematics.Complex((RealPart * Complex.RealPart + ImaginaryPart * Complex.ImaginaryPart) / (Mathematics.Square(Complex.RealPart) + Mathematics.Square(Complex.ImaginaryPart)), (ImaginaryPart * Complex.RealPart - RealPart * Complex.ImaginaryPart) / (Mathematics.Square(Complex.RealPart) + Mathematics.Square(Complex.ImaginaryPart)));
+					return Mathematics.Complex((RealPart * Complex.RealPart() + ImaginaryPart * Complex.ImaginaryPart()) / (Mathematics.Square(Complex.RealPart()) + Mathematics.Square(Complex.ImaginaryPart())), (ImaginaryPart * Complex.RealPart() - RealPart * Complex.ImaginaryPart()) / (Mathematics.Square(Complex.RealPart()) + Mathematics.Square(Complex.ImaginaryPart())));
 				};
 
 				this.AbsoluteValue = function() {
