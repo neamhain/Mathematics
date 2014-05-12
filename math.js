@@ -253,46 +253,6 @@
 					return Mathematics.Matrix(Vector);
 				};
 
-				this.Minor = function(Row, Column) {
-					var Minor = [];
-
-					for(var RowIterator = 0; RowIterator < Rows; RowIterator++) {
-						if(RowIterator == Row - 1) {
-							continue;
-						}
-
-						Minor.push([]);
-
-						for(var ColumnIterator = 1; ColumnIterator <= Columns; ColumnIterator++) {
-							if(ColumnIterator == Column) {
-								continue;
-							}
-
-							Minor[Minor.length - 1].push(this.Item(RowIterator + 1, ColumnIterator));
-						}
-					}
-
-					return Mathematics.Matrix(Minor);
-				};
-
-				this.Cofactor = function(Row, Column) {
-					return Mathematics.Power(-1, Row + Column) * this.Minor(Row, Column).Determinant();
-				};
-
-				this.Adjugate = function() {
-					var Matrix = [];
-
-					for(var RowIterator = 1; RowIterator <= Rows; RowIterator++) {
-						Matrix.push([]);
-
-						for(var ColumnIterator = 1; ColumnIterator <= Columns; ColumnIterator++) {
-							Matrix[Matrix.length - 1].push(this.Cofactor(RowIterator, ColumnIterator));
-						}
-					}
-
-					return Mathematics.Matrix(Matrix).Transpose();
-				};
-
 				this.ScalarMultiply = function(Scalar) {
 					for(var RowIterator = 0; RowIterator < Rows; RowIterator++) {
 						for(var ColumnIterator = 0; ColumnIterator < Columns; ColumnIterator++) {
@@ -336,6 +296,46 @@
 				};
 
 				if(Columns == Rows) {
+					this.Adjugate = function() {
+						var Matrix = [];
+
+						for(var RowIterator = 1; RowIterator <= Rows; RowIterator++) {
+							Matrix.push([]);
+
+							for(var ColumnIterator = 1; ColumnIterator <= Columns; ColumnIterator++) {
+								Matrix[Matrix.length - 1].push(this.Cofactor(RowIterator, ColumnIterator));
+							}
+						}
+
+						return Mathematics.Matrix(Matrix).Transpose();
+					};
+
+					this.Minor = function(Row, Column) {
+						var Minor = [];
+
+						for(var RowIterator = 0; RowIterator < Rows; RowIterator++) {
+							if(RowIterator == Row - 1) {
+								continue;
+							}
+
+							Minor.push([]);
+
+							for(var ColumnIterator = 1; ColumnIterator <= Columns; ColumnIterator++) {
+								if(ColumnIterator == Column) {
+									continue;
+								}
+
+								Minor[Minor.length - 1].push(this.Item(RowIterator + 1, ColumnIterator));
+							}
+						}
+
+						return Mathematics.Matrix(Minor).Determinant();
+					};
+
+					this.Cofactor = function(Row, Column) {
+						return Mathematics.Power(-1, Row + Column) * this.Minor(Row, Column);
+					};
+
 					this.Trace = function(Matrix) {
 						var Trace = 0;
 
@@ -346,18 +346,15 @@
 						return Trace;
 					};
 
-					this.Determinant = function(Matrix) {
+					this.Determinant = function() {
 						if(Rows == 1) {
 							return this.Item(1, 1);
+						} else if(Rows == 2) {
+							return this.Item(1, 1) * this.Item(2, 2) - this.Item(1, 2) * this.Item(2, 1);
 						} else {
-							var Production = 1, Difference = 1;
-
-							for(var ColumnIterator = 1; ColumnIterator <= Columns; ColumnIterator++) {
-								Production *= this.Item(ColumnIterator, ColumnIterator);
-								Difference *= this.Item(ColumnIterator, Columns + 1 - ColumnIterator);
-							}
-
-							return Production - Difference;
+							return Mathematics.Sum(1, Rows, (function(Matrix) {
+								return function(I) { return Matrix.Item(I, 1) * Matrix.Cofactor(I, 1) }
+							})(this));
 						}
 					};
 
@@ -443,6 +440,10 @@
 				this.Conjugate = function() {
 					return Mathematics.Complex(RealPart, -ImaginaryPart);
 				};
+
+				this.Stringify = function() {
+					return RealPart.toString() + ' + ' + ImaginaryPart.toString() + 'i';
+				}
 			};
 
 			return new Complex(A, B);
