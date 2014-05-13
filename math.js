@@ -131,7 +131,7 @@
 			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(10, 0)) : Math.log(X) / Math.log(10);
 		},
 		Ln: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ln(X.AbsoluteValue()), Mathematics.Arctan(X.ImaginaryPart() / X.RealPart())) : Math.log(X);
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ln(X.AbsoluteValue()), Mathematics.Arctan(X.ImaginaryPart() / X.RealPart())) : (X < 0 ? Mathematics.Complex(Mathematics.Ln(-X), Mathematics.PI) : Math.log(X));
 		},
 
 		// Sequence (Progression)
