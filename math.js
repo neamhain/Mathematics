@@ -124,11 +124,15 @@
 		},
 
 		// Exponent and logarithm
-		Exp: Math.exp,
-		Log: function(X) {
-			return Math.log(X) / Math.log(10);
+		Exp: function(X) {
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Exp(X.RealPart()) * Mathematics.Cos(X.ImaginaryPart()), Mathematics.Exp(X.RealPart()) * Mathematics.Sin(X.ImaginaryPart())) : Math.exp(X);
 		},
-		Ln: Math.log,
+		Log: function(X) {
+			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(10, 0)) : Math.log(X) / Math.log(10);
+		},
+		Ln: function(X) {
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ln(X.AbsoluteValue()), Mathematics.Arctan(X.ImaginaryPart() / X.RealPart())) : Math.log(X);
+		},
 
 		// Sequence (Progression)
 		AP: function(A, D) {
