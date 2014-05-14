@@ -15,54 +15,26 @@
 	var Mathematics = {
 		// Default arithmetic caculation
 		Add: function(A, B) {
-			if(Mathematics.isComplex(A)) {
-				if(!Mathematics.isComplex(B)) {
-					B = Mathematics.Complex(B, 0);
-				}
-			} else if(Mathematics.isComplex(B)) {
-				if(!Mathematics.isComplex(A)) {
-					A = Mathematics.Complex(A, 0);
-				}
-			}
+			A = Mathematics.isComplex(B) && !Mathematics.isComplex(A) ? Mathematics.Complex(A, 0) : A;
+			B = Mathematics.isComplex(A) && !Mathematics.isComplex(B) ? Mathematics.Complex(B, 0) : B;
 
 			return Mathematics.isComplex(A) ? A.Add(B) : A + B;
 		},
 		Subtract: function(A, B) {
-			if(Mathematics.isComplex(A)) {
-				if(!Mathematics.isComplex(B)) {
-					B = Mathematics.Complex(B, 0);
-				}
-			} else if(Mathematics.isComplex(B)) {
-				if(!Mathematics.isComplex(A)) {
-					A = Mathematics.Complex(A, 0);
-				}
-			}
+			A = Mathematics.isComplex(B) && !Mathematics.isComplex(A) ? Mathematics.Complex(A, 0) : A;
+			B = Mathematics.isComplex(A) && !Mathematics.isComplex(B) ? Mathematics.Complex(B, 0) : B;
 
 			return Mathematics.isComplex(A) ? A.Subtract(B) : A - B;
 		},
 		Multiply: function(A, B) {
-			if(Mathematics.isComplex(A)) {
-				if(!Mathematics.isComplex(B)) {
-					B = Mathematics.Complex(B, 0);
-				}
-			} else if(Mathematics.isComplex(B)) {
-				if(!Mathematics.isComplex(A)) {
-					A = Mathematics.Complex(A, 0);
-				}
-			}
+			A = Mathematics.isComplex(B) && !Mathematics.isComplex(A) ? Mathematics.Complex(A, 0) : A;
+			B = Mathematics.isComplex(A) && !Mathematics.isComplex(B) ? Mathematics.Complex(B, 0) : B;
 
 			return Mathematics.isComplex(A) ? A.Multiply(B) : A * B;
 		},
 		Divide: function(A, B) {
-			if(Mathematics.isComplex(A)) {
-				if(!Mathematics.isComplex(B)) {
-					B = Mathematics.Complex(B, 0);
-				}
-			} else if(Mathematics.isComplex(B)) {
-				if(!Mathematics.isComplex(A)) {
-					A = Mathematics.Complex(A, 0);
-				}
-			}
+			A = Mathematics.isComplex(B) && !Mathematics.isComplex(A) ? Mathematics.Complex(A, 0) : A;
+			B = Mathematics.isComplex(A) && !Mathematics.isComplex(B) ? Mathematics.Complex(B, 0) : B;
 
 			return Mathematics.isComplex(A) ? A.Divide(B) : A / B;
 		},
@@ -82,13 +54,21 @@
 		Cube: function(X) {
 			return Mathematics.Power(X, 3);
 		},
-		Abs: Math.abs,
+		Abs: function(X) {
+			return Mathematics.isComplex(X) ? Mathematics.Distance([X.RealPart(), X.ImaginaryPart()], [0, 0]) : Math.abs(X);
+		},
 		Sign: function(X) {
 			return X == 0 ? X : X / Mathematics.Abs(X);
 		},
-		Floor: Math.floor,
-		Ceil: Math.ceil,
-		Round: Math.round,
+		Floor: function(X) {
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Floor(X.RealPart()), Mathematics.Floor(X.ImaginaryPart())) : Math.floor(X);
+		},
+		Ceil: function(X) {
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ceil(X.RealPart()), Mathematics.Ceil(X.ImaginaryPart())) : Math.ceil(X);	
+		},
+		Round: function(X) {
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Round(X.RealPart()), Mathematics.Round(X.ImaginaryPart())) : Math.round(X);	
+		},
 		GCD: function(A, B) {
 			A = Mathematics.Abs(A);
 			B = Mathematics.Abs(B);
@@ -185,7 +165,7 @@
 			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(Mathematics.Ln(10), 0)) : Math.log(X) / Math.log(10);
 		},
 		Ln: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ln(X.AbsoluteValue()), Mathematics.Arctan(X.ImaginaryPart() / X.RealPart())) : (X < 0 ? Mathematics.Complex(Mathematics.Ln(-X), Mathematics.PI) : Math.log(X));
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ln(Mathematics.Abs(X)), Mathematics.Arctan(X.ImaginaryPart() / X.RealPart())) : (X < 0 ? Mathematics.Complex(Mathematics.Ln(-X), Mathematics.PI) : Math.log(X));
 		},
 
 		// Sequence (Progression)
@@ -484,6 +464,12 @@
 					return ImaginaryPart;
 				};
 
+				if(ImaginaryPart == 0) {
+					this.Realize = function() {
+						return Number(RealPart);
+					}
+				}
+
 				this.Add = function(Complex) {
 					return Mathematics.Complex(RealPart + Complex.RealPart(), ImaginaryPart + Complex.ImaginaryPart());
 				};
@@ -498,10 +484,6 @@
 
 				this.Divide = function(Complex) {
 					return Mathematics.Complex((RealPart * Complex.RealPart() + ImaginaryPart * Complex.ImaginaryPart()) / (Mathematics.Square(Complex.RealPart()) + Mathematics.Square(Complex.ImaginaryPart())), (ImaginaryPart * Complex.RealPart() - RealPart * Complex.ImaginaryPart()) / (Mathematics.Square(Complex.RealPart()) + Mathematics.Square(Complex.ImaginaryPart())));
-				};
-
-				this.AbsoluteValue = function() {
-					return Mathematics.Distance([RealPart, ImaginaryPart], [0, 0]);
 				};
 
 				this.Conjugate = function() {
