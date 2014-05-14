@@ -40,7 +40,9 @@
 		},
 
 		// Essential algebric functions
-		Power: Math.pow,
+		Power: function(W, Z) {
+			return Mathematics.isComplex(W) || Mathematics.isComplex(Z) ? Mathematics.Exp(Mathematics.Multiply(Z, Mathematics.Ln(W))) : Math.pow(W, Z);
+		},
 		Root: function(X, N) {
 			if(!N) {
 				N = 2;
@@ -545,6 +547,11 @@
 
 		return Mathematics.Matrix(Values);
 	};
+
+	// Extend to default classes
+	Number.prototype.Stringify = function() {
+		return this.toString();
+	}
 
 	window.Mathematics = Mathematics;
 })();
