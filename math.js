@@ -13,6 +13,60 @@
 	"use strict";
 
 	var Mathematics = {
+		// Default arithmetic caculation
+		Add: function(A, B) {
+			if(Mathematics.isComplex(A)) {
+				if(!Mathematics.isComplex(B)) {
+					B = Mathematics.Complex(B, 0);
+				}
+			} else if(Mathematics.isComplex(B)) {
+				if(!Mathematics.isComplex(A)) {
+					A = Mathematics.Complex(A, 0);
+				}
+			}
+
+			return Mathematics.isComplex(A) ? A.Add(B) : A + B;
+		},
+		Subtract: function(A, B) {
+			if(Mathematics.isComplex(A)) {
+				if(!Mathematics.isComplex(B)) {
+					B = Mathematics.Complex(B, 0);
+				}
+			} else if(Mathematics.isComplex(B)) {
+				if(!Mathematics.isComplex(A)) {
+					A = Mathematics.Complex(A, 0);
+				}
+			}
+
+			return Mathematics.isComplex(A) ? A.Subtract(B) : A - B;
+		},
+		Multiply: function(A, B) {
+			if(Mathematics.isComplex(A)) {
+				if(!Mathematics.isComplex(B)) {
+					B = Mathematics.Complex(B, 0);
+				}
+			} else if(Mathematics.isComplex(B)) {
+				if(!Mathematics.isComplex(A)) {
+					A = Mathematics.Complex(A, 0);
+				}
+			}
+
+			return Mathematics.isComplex(A) ? A.Multiply(B) : A * B;
+		},
+		Divide: function(A, B) {
+			if(Mathematics.isComplex(A)) {
+				if(!Mathematics.isComplex(B)) {
+					B = Mathematics.Complex(B, 0);
+				}
+			} else if(Mathematics.isComplex(B)) {
+				if(!Mathematics.isComplex(A)) {
+					A = Mathematics.Complex(A, 0);
+				}
+			}
+
+			return Mathematics.isComplex(A) ? A.Divide(B) : A / B;
+		},
+
 		// Essential algebric functions
 		Power: Math.pow,
 		Root: function(X, N) {
@@ -87,22 +141,22 @@
 
 		// Hyperbolic functions
 		Sinh: function(X) {
-			return (Mathematics.Exp(X) - Mathematics.Exp(-X)) / 2;
+			return Mathematics.Divide(Mathematics.Subtract(Mathematics.Exp(X), Mathematics.Exp(Mathematics.Multiply(X, -1))), 2);
 		},
 		Cosh: function(X) {
-			return (Mathematics.Exp(X) + Mathematics.Exp(-X)) / 2;
+			return Mathematics.Divide(Mathematics.Add(Mathematics.Exp(X), Mathematics.Exp(Mathematics.Multiply(X, -1))), 2);
 		},
 		Tanh: function(X) {
-			return Mathematics.Sinh(X) / Mathematics.Cosh(X);
+			return Mathematics.Divide(Mathematics.Sinh(X), Mathematics.Cosh(X));
 		},
 		Sech: function(X) {
-			return 1 / Mathematics.Cosh(X);
+			return Mathematics.Divide(1, Mathematics.Cosh(X));
 		},
 		Csch: function(X) {
-			return 1 / Mathematics.Sinh(X);	
+			return Mathematics.Divide(1, Mathematics.Sinh(X));	
 		},
 		Coth: function(X) {
-			return 1 / Mathematics.Tanh(X);
+			return Mathematics.Divide(1, Mathematics.Tanh(X));
 		},
 		Arcsinh: function(X) {
 			return Mathematics.Ln(X + Mathematics.Root(Mathematics.Square(X) + 1));
@@ -128,7 +182,7 @@
 			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Exp(X.RealPart()) * Mathematics.Cos(X.ImaginaryPart()), Mathematics.Exp(X.RealPart()) * Mathematics.Sin(X.ImaginaryPart())) : Math.exp(X);
 		},
 		Log: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(10, 0)) : Math.log(X) / Math.log(10);
+			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(Mathematics.Ln(10), 0)) : Math.log(X) / Math.log(10);
 		},
 		Ln: function(X) {
 			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ln(X.AbsoluteValue()), Mathematics.Arctan(X.ImaginaryPart() / X.RealPart())) : (X < 0 ? Mathematics.Complex(Mathematics.Ln(-X), Mathematics.PI) : Math.log(X));
