@@ -109,7 +109,9 @@
 			return Mathematics.Divide(1, Mathematics.Tan(X));
 		},
 		Arcsin: function(X) {
-			return Mathematics.Complex(0, 1).Multiply(Mathematics.Arcsinh(Mathematics.Complex(X.ImaginaryPart(), X.RealPart())))
+			X = Mathematics.isComplex(X) ? X : Mathematics.Complex(X, 0);
+			
+			return Mathematics.Complex(0, 1).Multiply(Mathematics.Arcsinh(Mathematics.Complex(X.ImaginaryPart(), X.RealPart())));
 		},
 		Arccos: function(X) {
 			return Mathematics.Subtract(Mathematics.PI / 2, Mathematics.Arcsin(X));
@@ -126,7 +128,7 @@
 		Arccot: function(X) {
 			return Mathematics.Arctan(Mathematics.Divide(1, X));
 		},
-
+		
 		// Hyperbolic functions
 		Sinh: function(X) {
 			return Mathematics.Divide(Mathematics.Subtract(Mathematics.Exp(X), Mathematics.Exp(Mathematics.Multiply(X, -1))), 2);
@@ -173,7 +175,7 @@
 			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(Mathematics.Ln(10), 0)) : Math.log(X) / Math.log(10);
 		},
 		Ln: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ln(Mathematics.Abs(X)), Mathematics.Arctan(X.ImaginaryPart() / X.RealPart())) : (X < 0 ? Mathematics.Complex(Mathematics.Ln(-X), Mathematics.PI) : Math.log(X));
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ln(Mathematics.Abs(X)), Math.atan2(X.ImaginaryPart(), X.RealPart())) : (X < 0 ? Mathematics.Complex(Mathematics.Ln(-X), Mathematics.PI) : Math.log(X));
 		},
 
 		// Sequence (Progression)
@@ -231,6 +233,11 @@
 		},
 
 		// Extra functions
+		Sinc: function(X) {
+			X = Mathematics.isComplex(X) && X.Realize ? X.Realize() : X;
+
+			return X == 0 ? 1 : Mathematics.Divide(Mathematics.Sin(X), X);
+		},
 		Zeta: function(S) {
 			if(S > 1) {
 				return S == Infinity ? 1 : Mathematics.Sum(1, Infinity, function(N) { return 1 / Mathematics.Power(N, S) });	
