@@ -121,10 +121,10 @@
 			return Mathematics.Arccos(Mathematics.Divide(1, X));
 		},
 		Arccsc: function(X) {
-			return Mathematics.Subtract(Mathematics.PI / 2, Mathematics.Arcsec(X));
+			return Mathematics.Arcsin(Mathematics.Divide(1, X));
 		},
 		Arccot: function(X) {
-			return Mathematics.Subtract(Mathematics.PI / 2, Mathematics.Arctan(X));
+			return Mathematics.Arctan(Mathematics.Divide(1, X));
 		},
 
 		// Hyperbolic functions
@@ -147,22 +147,22 @@
 			return Mathematics.Divide(1, Mathematics.Tanh(X));
 		},
 		Arcsinh: function(X) {
-			return Mathematics.Ln(X + Mathematics.Root(Mathematics.Square(X) + 1));
+			return Mathematics.Ln(Mathematics.Add(X, Mathematics.Root(Mathematics.Add(Mathematics.Square(X), 1))));
 		},
 		Arccosh: function(X) {
-			return X >= 1 ? Mathematics.Ln(X + Mathematics.Root(Mathematics.Square(X) - 1)) : undefined;
+			return Mathematics.Ln(Mathematics.Add(X, Mathematics.Root(Mathematics.Subtract(Mathematics.Square(X), 1))));
 		},
 		Arctanh: function(X) {
-			return Mathematics.Abs(X) < 1 ? Mathematics.Ln((X + 1) / (1 - X)) / 2 : undefined;
+			return Mathematics.Divide(Mathematics.Ln(Mathematics.Divide(Mathematics.Add(1, X), Mathematics.Subtract(1, X))), 2);
 		},
 		Arcsech: function(X) {
-			return Mathematics.Arccosh(1 / X);
+			return Mathematics.Arccosh(Mathematics.Divide(1, X));
 		},
 		Arccsch: function(X) {
-			return Mathematics.Arcsinh(1 / X);
+			return Mathematics.Arcsinh(Mathematics.Divide(1, X));
 		},
 		Arccoth: function(X) {
-			return Mathematics.Arctanh(1 / X);
+			return Mathematics.Arctanh(Mathematics.Divide(1, X));
 		},
 
 		// Exponent and logarithm
