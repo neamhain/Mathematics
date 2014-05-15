@@ -108,17 +108,23 @@
 		Cot: function(X) {
 			return Mathematics.Divide(1, Mathematics.Tan(X));
 		},
-		Arcsin: Math.asin,
-		Arccos: Math.acos,
-		Arctan: Math.atan,
+		Arcsin: function(X) {
+			return Mathematics.Complex(0, 1).Multiply(Mathematics.Arcsinh(Mathematics.Complex(X.ImaginaryPart(), X.RealPart())))
+		},
+		Arccos: function(X) {
+			return Mathematics.Subtract(Mathematics.PI / 2, Mathematics.Arcsin(X));
+		},
+		Arctan: function(X) {
+			return Mathematics.Arcsin(Mathematics.Divide(X, Mathematics.Root(Mathematics.Add(Mathematics.Square(X), 1))));
+		},
 		Arcsec: function(X) {
-			return Math.acos(1 / X);
+			return Mathematics.Arccos(Mathematics.Divide(1, X));
 		},
 		Arccsc: function(X) {
-			return Math.asin(1 / X);
+			return Mathematics.Subtract(Mathematics.PI / 2, Mathematics.Arcsec(X));
 		},
 		Arccot: function(X) {
-			return Math.atan(1 / X);
+			return Mathematics.Subtract(Mathematics.PI / 2, Mathematics.Arctan(X));
 		},
 
 		// Hyperbolic functions
