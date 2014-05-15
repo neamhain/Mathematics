@@ -48,7 +48,7 @@
 				N = 2;
 			}
 
-			return Mathematics.Power(X, 1 / N);
+			return Mathematics.Power(X, Mathematics.Divide(1, N));
 		},
 		Square: function(X) {
 			return Mathematics.Power(X, 2);
@@ -91,22 +91,22 @@
 
 		// Trigonal functions
 		Sin: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Sin(X.RealPart()) * Mathematics.Cosh(X.ImaginaryPart()), Mathematics.Cos(X.RealPart()) * Mathematics.Sinh(X.ImaginaryPart())) : Math.sin(X);
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Multiply(Mathematics.Sin(X.RealPart()), Mathematics.Cosh(X.ImaginaryPart())), Mathematics.Multiply(Mathematics.Cos(X.RealPart()), Mathematics.Sinh(X.ImaginaryPart()))) : Math.sin(X);
 		},
 		Cos: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Cos(X.RealPart()) * Mathematics.Cosh(X.ImaginaryPart()), -Mathematics.Sin(X.RealPart()) * Mathematics.Sinh(X.ImaginaryPart())) : Math.cos(X);
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Multiply(Mathematics.Cos(X.RealPart()), Mathematics.Cosh(X.ImaginaryPart())), Mathematics.Multiply(Mathematics.Sin(X.RealPart()), Mathematics.Sinh(X.ImaginaryPart()))).Conjugate() : Math.cos(X);
 		},
 		Tan: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Sin(X.RealPart()) * Mathematics.Cosh(X.ImaginaryPart()) / (Mathematics.Cos(X.RealPart()) * Mathematics.Cosh(X.ImaginaryPart()) - Mathematics.Sin(X.RealPart()) * Mathematics.Sinh(X.ImaginaryPart())), Mathematics.Cos(X.RealPart()) * Mathematics.Sinh(X.ImaginaryPart()) / (Mathematics.Cos(X.RealPart()) * Mathematics.Cosh(X.ImaginaryPart()) - Mathematics.Sin(X.RealPart()) * Mathematics.Sinh(X.ImaginaryPart()))) : Math.tan(X);
+			return Mathematics.Divide(Mathematics.Sin(X), Mathematics.Cos(X));
 		},
 		Sec: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(1, 0).Divide(Mathematics.Complex(Mathematics.Cos(X.RealPart()) * Mathematics.Cosh(X.ImaginaryPart()), Mathematics.Sin(X.RealPart()) * Mathematics.Sinh(X.ImaginaryPart()))) : 1 / Math.cos(X);
+			return Mathematics.Divide(1, Mathematics.Cos(X));
 		},
 		Csc: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics(0, -1).Divide(Mathematics.Complex(Mathematics.Cos(X.RealPart()) * Mathematics.Sinh(X.ImaginaryPart()), Mathematics.Sin(X.RealPart()) * Mathematics.Cosh(X.ImaginaryPart()))) : 1 / Math.sin(X);	
+			return Mathematics.Divide(1, Mathematics.Sin(X));
 		},
 		Cot: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(0, Mathematics.Cos(X.RealPart()) * Mathematics.Cosh(X.ImaginaryPart())).Divide(Mathematics.Complex(Mathematics.Cos(X.RealPart()) * Mathematics.Sinh(X.ImaginaryPart()), -Mathematics.Sin(X.RealPart()) * Mathematics.Cosh(X.ImaginaryPart()))).Multiply(Mathematics.Complex(-1, 0)).Subtract(Mathematics.Complex(Mathematics.Sin(X.RealPart()) * Mathematics.Sinh(X.ImaginaryPart()), 0).Divide(Mathematics.Complex(Mathematics.Cos(X.RealPart()) * Mathematics.Sinh(X.ImaginaryPart()), -Mathematics.Sin(X.RealPart()) * Mathematics.Cosh(X.ImaginaryPart())))) : 1 / Math.tan(X);
+			return Mathematics.Divide(1, Mathematics.Tan(X));
 		},
 		Arcsin: Math.asin,
 		Arccos: Math.acos,
