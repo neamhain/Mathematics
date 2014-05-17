@@ -128,7 +128,7 @@
 		Arccot: function(X) {
 			return Mathematics.Arctan(Mathematics.Divide(1, X));
 		},
-		
+
 		// Hyperbolic functions
 		Sinh: function(X) {
 			return Mathematics.Divide(Mathematics.Subtract(Mathematics.Exp(X), Mathematics.Exp(Mathematics.Multiply(X, -1))), 2);
@@ -174,6 +174,9 @@
 		Log: function(X) {
 			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(Mathematics.Ln(10), 0)) : Math.log(X) / Math.log(10);
 		},
+		Lb: function(X) {
+			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(Mathematics.Ln(2), 0)) : Math.log(X) / Math.log(2);
+		},
 		Ln: function(X) {
 			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ln(Mathematics.Abs(X)), Math.atan2(X.ImaginaryPart(), X.RealPart())) : (X < 0 ? Mathematics.Complex(Mathematics.Ln(-X), Mathematics.PI) : Math.log(X));
 		},
@@ -191,45 +194,45 @@
 		},
 		HP: function(A, D) {
 			return function(N) {
-				return 1 / Mathematics.ArithmeticProgression(A, D)(N);
+				return 1 / Mathematics.AP(A, D)(N);
 			};
 		},
 		Fibonacci: function(N) {
 			return Mathematics.Round((1 / Mathematics.Root(5)) * (Mathematics.Power((1 + Mathematics.Root(5)) / 2, N) - Mathematics.Power((1 - Mathematics.Root(5)) / 2, N)));
 		},
 		Sum: function(From, To, Fx) {
-			var Summation = 0;
+			var Summation = Mathematics.Complex(0, 0);
 
 			for(var Iterator = From; Iterator <= To; Iterator++) {
 				if(Mathematics.Abs(To) == Infinity) {
-					if(Summation != Summation + Fx(Iterator)) {
-						Summation += Fx(Iterator);
+					if(Summation.Stringify() != Mathematics.Add(Summation, Fx(Iterator)).Stringify()) {
+						Summation = Mathematics.Add(Summation, Fx(Iterator));
 					} else {
 						break;
 					}
 				} else {
-					Summation += Fx(Iterator);	
+					Summation = Mathematics.Add(Summation, Fx(Iterator));
 				}
 			}
 
-			return Summation;
+			return Summation.Realize ? Summation.Realize() : Summation;
 		},
 		Product: function(From, To, Fx) {
-			var Production = 1;
+			var Production = Mathematics.Complex(1, 0);
 
 			for(var Iterator = From; Iterator <= To; Iterator++) {
 				if(Mathematics.Abs(To) == Infinity) {
-					if(Production != Production * Fx(Iterator)) {
-						Production *= Fx(Iterator);
+					if(Production.Stringify() != Mathematics.Multiply(Production, Fx(Iterator)).Stringify()) {
+						Production = Mathematics.Multiply(Production, Fx(Iterator));
 					} else {
 						break;
 					}
 				} else {
-					Production *= Fx(Iterator);
+					Production = Mathematics.Multiply(Production, Fx(Iterator));
 				}
 			}
 
-			return Production;
+			return Production.Realize ? Production.Realize() : Production;
 		},
 
 		// Extra functions
@@ -239,30 +242,25 @@
 			return X == 0 ? 1 : Mathematics.Divide(Mathematics.Sin(X), X);
 		},
 		Zeta: function(S) {
-			if(S > 1) {
-				return S == Infinity ? 1 : Mathematics.Sum(1, Infinity, function(N) { return 1 / Mathematics.Power(N, S) });	
-			} else {
-				return undefined;
-			}
+			return S > 1 ? (S == Infinity ? 1 : Mathematics.Sum(1, Infinity, function(N) { return Mathematics.Divide(1, Mathematics.Power(N, S)) })) : undefined;
 		},
 		Gamma: function(T) {
-			if(T > 0 || T < 0 && !Mathematics.isInteger(T)) {
-				return Mathematics.isInteger(T) ? Mathematics.Product(1, T - 1, function(N) { return N }) : Mathematics.Product(1, Infinity, function(N) { return Mathematics.Power(1 + 1 / N, T) / (1 + T / N) }) / T;	
-			} else {
-				return undefined;
-			}
+			return Mathematics.isInteger(T) ? Mathematics.Product(1, Mathematics.Subtract(T, 1), function(N) { return N }) : Mathematics.Divide(Mathematics.Product(1, Infinity, function(N) { return Mathematics.Divide(Mathematics.Power(Mathematics.Add(1, Mathematics.Divide(1, N)), T), Mathematics.Add(1, Mathematics.Divide(T, N))) }), T);
 		},
 		Factorial: function(N) {
-			return Mathematics.isInteger(N) ? Mathematics.Gamma(N + 1) : undefined;
+			return Mathematics.Gamma(Mathematics.Add(N, 1));
 		},
 		isInteger: function(X) {
-			return X % 1 == 0;
+			return Mathematics.isComplex(X) ? (X.Realize instanceof Function && X.Realize() % 1 == 0) : (X % 1 == 0);
 		},
 		isComplex: function(Z) {
 			return (Z.RealPart instanceof Function) && (Z.ImaginaryPart instanceof Function);
 		},
 		isCoprime: function(A, B) {
-			return Mathematics.GCD(A, B) == 1;
+			A = Mathematics.isInteger(A) && Mathematics.isComplex(A) ? A.Realize() : A;
+			B = Mathematics.isInteger(B) && Mathematics.isComplex(B) ? B.Realize() : B;
+
+			return Mathematics.isInteger(A) && Mathematics.isInteger(B) && Mathematics.GCD(A, B) == 1;
 		},
 
 		// Unit conversion
@@ -275,10 +273,10 @@
 
 		// Point
 		Distance: function(P, Q) {
-			return Mathematics.Root(Mathematics.Square(Q[0] - P[0]) + Mathematics.Square(Q[1] - P[1]));
+			return Mathematics.Root(Mathematics.Square(Mathematics.Subtract(Q[0], P[0])) + Mathematics.Square(Mathematics.Subtract(Q[1], P[1])));
 		},
 		Midpoint: function(P, Q) {
-			return [(P[0] + Q[0]) / 2, (P[1] + Q[1]) / 2];
+			return [Mathematics.Divide(Mathematics.Add(Q[0], P[0]), 2), Mathematics.Divide(Mathematics.Add(Q[1], P[1]), 2)];
 		},
 
 		// Matrix
@@ -318,7 +316,7 @@
 				this.ScalarMultiply = function(Scalar) {
 					for(var RowIterator = 0; RowIterator < Rows; RowIterator++) {
 						for(var ColumnIterator = 0; ColumnIterator < Columns; ColumnIterator++) {
-							ValueSet[RowIterator][ColumnIterator] *= Scalar;
+							ValueSet[RowIterator][ColumnIterator] = Mathematics.Multiply(ValueSet[RowIterator][ColumnIterator], Scalar);
 						}
 					}
 				};
@@ -348,7 +346,7 @@
 								Induction[RowIterator][ColumnIterator] = 0;
 
 								for(var Iterator = 1; Iterator <= Columns; Iterator++) {
-									Induction[RowIterator][ColumnIterator] += this.Item(RowIterator + 1, Iterator) * Transposal.Item(ColumnIterator + 1, Iterator);
+									Induction[RowIterator][ColumnIterator] = Mathematics.Add(Mathematics.Multiply(this.Item(RowIterator + 1, Iterator), Transposal.Item(ColumnIterator + 1, Iterator)));
 								}
 							}
 						}
@@ -395,14 +393,14 @@
 					};
 
 					this.Cofactor = function(Row, Column) {
-						return Mathematics.Power(-1, Row + Column) * this.Minor(Row, Column);
+						return Mathematics.Multiply(Mathematics.Power(-1, Row + Column), this.Minor(Row, Column));
 					};
 
 					this.Trace = function(Matrix) {
 						var Trace = 0;
 
 						for(var Iterator = 1; Iterator <= Rows; Iterator++) {
-							Trace += this.Item(Iterator, Iterator);
+							Trace = Mathematics.Add(Trace, this.Item(Iterator, Iterator));
 						}
 
 						return Trace;
@@ -415,7 +413,7 @@
 							return this.Item(1, 1) * this.Item(2, 2) - this.Item(1, 2) * this.Item(2, 1);
 						} else {
 							return Mathematics.Sum(1, Rows, (function(Matrix) {
-								return function(I) { return Matrix.Item(I, 1) * Matrix.Cofactor(I, 1) }
+								return function(I) { return Mathematics.Multiply(Matrix.Item(I, 1), Matrix.Cofactor(I, 1)) }
 							})(this));
 						}
 					};
@@ -423,7 +421,7 @@
 					if(this.Determinant() != 0) {
 						this.InverseMatrix = function() {
 							var InverseMatrix = this.Adjugate();
-							InverseMatrix.ScalarMultiply(1 / this.Determinant());
+							InverseMatrix.ScalarMultiply(Mathematics.Divide(1, this.Determinant()));
 
 							return InverseMatrix;
 						};
@@ -453,7 +451,7 @@
 						MatrixString += RowIterator == 1 ? '' : ' ';
 
 						for(var ColumnIterator = 1; ColumnIterator <= Columns; ColumnIterator++) {
-							MatrixString += this.Item(RowIterator, ColumnIterator).toString() + (RowIterator == Rows && ColumnIterator == Columns ? '' : ', ');
+							MatrixString += this.Item(RowIterator, ColumnIterator).Stringify() + (RowIterator == Rows && ColumnIterator == Columns ? '' : ', ');
 						}
 
 						MatrixString += RowIterator == Rows ? ']' : '\n';
@@ -519,11 +517,17 @@
 		},
 
 		// Permutation and combination
-		Permutate: function(N, R) {
-			return Mathematics.Factorial(N) / Mathematics.Factorial(N - R);
+		Permutation: function(N, R) {
+			return Mathematics.Divide(Mathematics.Factorial(N), Mathematics.Factorial(Mathematics.Subtract(N, R)));
 		},
-		Combinate: function(N, R) {
-			return Mathematics.Permutate(N, R) / Mathematics.Factorial(R);
+		RepeatedPermutation: function(N, R) {
+			return Mathematics.Power(N, R);
+		},
+		Combination: function(N, R) {
+			return Mathematics.Divide(Mathematics.Permutation(N, R), Mathematics.Factorial(R));
+		},
+		RepeatedCombination: function(N, R) {
+			return Mathematics.Combination(Mathematics.Subtract(Mathematics.Add(N, R), 1), R);
 		}
 	};
 
