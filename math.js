@@ -9,7 +9,7 @@
  * http://www.heavenlab.kr/
  **/
 
-(function() {
+(function(GlobalObject) {
 	"use strict";
 
 	// Extend to default classes
@@ -51,6 +51,19 @@
 		// Essential algebric functions
 		Power: function(W, Z) {
 			return Mathematics.isComplex(W) || Mathematics.isComplex(Z) ? Mathematics.Exp(Mathematics.Multiply(Z, Mathematics.Ln(W))).Generalize() : Math.pow(W, Z);
+		},
+		Tetration: function(A, X) {
+			if(Mathematics.isInteger(X)) {
+				var Tower = A;
+
+				for(var Iterator = 0; Iterator < X - 1; Iterator++) {
+					Tower = Mathematics.Power(A, Tower);
+				}
+
+				return X > 0 ? Tower : (X == 0 ? 1 : (X == -1 ? 0 : undefined));
+			} else {
+				return undefined;
+			}
 		},
 		Root: function(X, N) {
 			if(!N) {
@@ -259,6 +272,9 @@
 		Factorial: function(N) {
 			return Mathematics.Gamma(Mathematics.Add(N, 1));
 		},
+		Random: function(X) {
+			return Mathematics.Round(Mathematics.Multiply(Math.random(), X));
+		},
 		isInteger: function(X) {
 			return Mathematics.isComplex(X) ? (X.Realize instanceof Function && X.Realize() % 1 == 0) : (X % 1 == 0);
 		},
@@ -303,7 +319,7 @@
 				};
 
 				this.RowVector = function(Row) {
-					return Mathematics.Matrix([ValueSet[Row - 1]]);
+					return Mathematics.Vector(ValueSet[Row - 1]);
 				};
 
 				this.ColumnVector = function(Column) {
@@ -313,7 +329,7 @@
 						Vector.push([this.Item(RowIterator, Column)]);
 					}
 
-					return Mathematics.Matrix(Vector);
+					return Mathematics.Vector(Vector.Transpose().RowVector(1));
 				};
 
 				this.ScalarMultiply = function(Scalar) {
@@ -342,6 +358,24 @@
 					}
 
 					return Mathematics.Matrix(Values);
+				};
+
+				this.Add = function(Matrix) {
+					var Values = [];
+
+					for(var RowIterator = 0; RowIterator < Rows; RowIterator++) {
+						Values[RowIterator] = [];
+
+						for(var ColumnIterator = 1; ColumnIterator <= Columns; ColumnIterator++) {
+							Values[RowIterator].push(Mathematics.Add(this.Item(RowIterator + 1, ColumnIterator), Matrix.Item(RowIterator + 1, ColumnIterator)));
+						}
+					}
+
+					return Mathematics.Matrix(Values);
+				};
+
+				this.Subtract = function(Matrix) {
+					return this.Add(Matrix.ScalarMultiply(-1));
 				};
 
 				this.Multiply = function(Matrix) {
@@ -439,8 +473,8 @@
 						} else {
 							var SerialArray = [];
 
-							for(var ColumnsIterator = 1; ColumnsIterator <= Columns; ColumnsIterator++) {
-								SerialArray.push(this.Item(1, ColumnsIterator));
+							for(var ColumnIterator = 1; ColumnIterator <= Columns; ColumnIterator++) {
+								SerialArray.push(this.Item(1, ColumnIterator));
 							}
 
 							return SerialArray;
@@ -544,7 +578,11 @@
 				var Matrix = Mathematics.Matrix([Components]);
 
 				this.Matrix = function() {
-					return Mathematics.Matrix([Matrix.RowVector(1).Serialize()]);
+					return Mathematics.Matrix([Matrix.Serialize()]);
+				};
+
+				this.Item = function(Index) {
+					return Matrix.Item(1, Index);
 				};
 
 				this.Length = function() {
@@ -557,9 +595,13 @@
 					return Mathematics.Root(Length);
 				};
 
-				this.Direction = function() {
-					//return Direction;
+				this.Add = function(Vector) {
+					return Mathematics.Vector(Matrix.Add(Vector.Matrix()).Serialize());
 				};
+
+				this.Subtract = function(Vector) {
+					return this.Add(Vector.ScalarMultiply(-1));
+				}
 
 				this.InnerProduct = this.ScalarProduct = this.DotProduct = function(Vector) {
 					return Matrix.Transpose().Multiply(Vector.Matrix()).Trace();
@@ -573,6 +615,14 @@
 
 				this.ScalarMultiply = function(Scalar) {
 					return Mathematics.Vector(this.Matrix().ScalarMultiply(Scalar).Serialize());
+				};
+
+				this.Serialize = function() {
+					return Matrix.Serialize();
+				};
+
+				this.Stringify = function() {
+					return Matrix.Stringify();
 				};
 			};
 
@@ -614,5 +664,5 @@
 		return Mathematics.Matrix(Values);
 	};
 
-	window.Mathematics = Mathematics;
-})();
+	GlobalObject.Mathematics = Mathematics;
+})(self);
