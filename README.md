@@ -1,3 +1,1 @@
-Mathematics
-===========
-Mathematics library for Javascript
+Mathematics =========== Mathematics library for Javascript

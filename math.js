@@ -12,36 +12,45 @@
 (function() {
 	"use strict";
 
+	// Extend to default classes
+	Number.prototype.Stringify = function() {
+		return this.toString();
+	};
+
+	Number.prototype.Generalize = function() {
+		return this;
+	};
+
 	var Mathematics = {
 		// Default arithmetic caculation
 		Add: function(A, B) {
 			A = Mathematics.isComplex(B) && !Mathematics.isComplex(A) ? Mathematics.Complex(A, 0) : A;
 			B = Mathematics.isComplex(A) && !Mathematics.isComplex(B) ? Mathematics.Complex(B, 0) : B;
 
-			return Mathematics.isComplex(A) ? A.Add(B) : A + B;
+			return Mathematics.isComplex(A) ? A.Add(B).Generalize() : A + B;
 		},
 		Subtract: function(A, B) {
 			A = Mathematics.isComplex(B) && !Mathematics.isComplex(A) ? Mathematics.Complex(A, 0) : A;
 			B = Mathematics.isComplex(A) && !Mathematics.isComplex(B) ? Mathematics.Complex(B, 0) : B;
 
-			return Mathematics.isComplex(A) ? A.Subtract(B) : A - B;
+			return Mathematics.isComplex(A) ? A.Subtract(B).Generalize() : A - B;
 		},
 		Multiply: function(A, B) {
 			A = Mathematics.isComplex(B) && !Mathematics.isComplex(A) ? Mathematics.Complex(A, 0) : A;
 			B = Mathematics.isComplex(A) && !Mathematics.isComplex(B) ? Mathematics.Complex(B, 0) : B;
 
-			return Mathematics.isComplex(A) ? A.Multiply(B) : A * B;
+			return Mathematics.isComplex(A) ? A.Multiply(B).Generalize() : A * B;
 		},
 		Divide: function(A, B) {
 			A = Mathematics.isComplex(B) && !Mathematics.isComplex(A) ? Mathematics.Complex(A, 0) : A;
 			B = Mathematics.isComplex(A) && !Mathematics.isComplex(B) ? Mathematics.Complex(B, 0) : B;
 
-			return Mathematics.isComplex(A) ? A.Divide(B) : A / B;
+			return Mathematics.isComplex(A) ? A.Divide(B).Generalize() : A / B;
 		},
 
 		// Essential algebric functions
 		Power: function(W, Z) {
-			return Mathematics.isComplex(W) || Mathematics.isComplex(Z) ? Mathematics.Exp(Mathematics.Multiply(Z, Mathematics.Ln(W))) : Math.pow(W, Z);
+			return Mathematics.isComplex(W) || Mathematics.isComplex(Z) ? Mathematics.Exp(Mathematics.Multiply(Z, Mathematics.Ln(W))).Generalize() : Math.pow(W, Z);
 		},
 		Root: function(X, N) {
 			if(!N) {
@@ -60,16 +69,16 @@
 			return Mathematics.isComplex(X) ? Mathematics.Distance([X.RealPart(), X.ImaginaryPart()], [0, 0]) : Math.abs(X);
 		},
 		Sign: function(X) {
-			return X == 0 ? X : X / Mathematics.Abs(X);
+			return X == 0 ? X : Mathematics.Divide(X, Mathematics.Abs(X));
 		},
 		Floor: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Floor(X.RealPart()), Mathematics.Floor(X.ImaginaryPart())) : Math.floor(X);
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Floor(X.RealPart()), Mathematics.Floor(X.ImaginaryPart())).Generalize() : Math.floor(X);
 		},
 		Ceil: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ceil(X.RealPart()), Mathematics.Ceil(X.ImaginaryPart())) : Math.ceil(X);	
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ceil(X.RealPart()), Mathematics.Ceil(X.ImaginaryPart())).Generalize() : Math.ceil(X);	
 		},
 		Round: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Round(X.RealPart()), Mathematics.Round(X.ImaginaryPart())) : Math.round(X);	
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Round(X.RealPart()), Mathematics.Round(X.ImaginaryPart())).Generalize() : Math.round(X);	
 		},
 		GCD: function(A, B) {
 			A = Mathematics.Abs(A);
@@ -91,94 +100,94 @@
 
 		// Trigonal functions
 		Sin: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Multiply(Mathematics.Sin(X.RealPart()), Mathematics.Cosh(X.ImaginaryPart())), Mathematics.Multiply(Mathematics.Cos(X.RealPart()), Mathematics.Sinh(X.ImaginaryPart()))) : Math.sin(X);
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Multiply(Mathematics.Sin(X.RealPart()), Mathematics.Cosh(X.ImaginaryPart())), Mathematics.Multiply(Mathematics.Cos(X.RealPart()), Mathematics.Sinh(X.ImaginaryPart()))).Generalize() : Math.sin(X);
 		},
 		Cos: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Multiply(Mathematics.Cos(X.RealPart()), Mathematics.Cosh(X.ImaginaryPart())), Mathematics.Multiply(Mathematics.Sin(X.RealPart()), Mathematics.Sinh(X.ImaginaryPart()))).Conjugate() : Math.cos(X);
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Multiply(Mathematics.Cos(X.RealPart()), Mathematics.Cosh(X.ImaginaryPart())), Mathematics.Multiply(Mathematics.Sin(X.RealPart()), Mathematics.Sinh(X.ImaginaryPart()))).Conjugate().Generalize() : Math.cos(X);
 		},
 		Tan: function(X) {
-			return Mathematics.Divide(Mathematics.Sin(X), Mathematics.Cos(X));
+			return Mathematics.Divide(Mathematics.Sin(X), Mathematics.Cos(X)).Generalize();
 		},
 		Sec: function(X) {
-			return Mathematics.Divide(1, Mathematics.Cos(X));
+			return Mathematics.Divide(1, Mathematics.Cos(X)).Generalize();
 		},
 		Csc: function(X) {
-			return Mathematics.Divide(1, Mathematics.Sin(X));
+			return Mathematics.Divide(1, Mathematics.Sin(X)).Generalize();
 		},
 		Cot: function(X) {
-			return Mathematics.Divide(1, Mathematics.Tan(X));
+			return Mathematics.Divide(1, Mathematics.Tan(X)).Generalize();
 		},
 		Arcsin: function(X) {
 			X = Mathematics.isComplex(X) ? X : Mathematics.Complex(X, 0);
 			
-			return Mathematics.Complex(0, 1).Multiply(Mathematics.Arcsinh(Mathematics.Complex(X.ImaginaryPart(), X.RealPart())));
+			return Mathematics.Complex(0, 1).Multiply(Mathematics.Arcsinh(Mathematics.Complex(X.ImaginaryPart(), -X.RealPart()))).Generalize();
 		},
 		Arccos: function(X) {
-			return Mathematics.Subtract(Mathematics.PI / 2, Mathematics.Arcsin(X));
+			return Mathematics.Subtract(Mathematics.PI / 2, Mathematics.Arcsin(X)).Generalize();
 		},
 		Arctan: function(X) {
-			return Mathematics.Arcsin(Mathematics.Divide(X, Mathematics.Root(Mathematics.Add(Mathematics.Square(X), 1))));
+			return Mathematics.Arcsin(Mathematics.Divide(X, Mathematics.Root(Mathematics.Add(Mathematics.Square(X), 1)))).Generalize();
 		},
 		Arcsec: function(X) {
-			return Mathematics.Arccos(Mathematics.Divide(1, X));
+			return Mathematics.Arccos(Mathematics.Divide(1, X)).Generalize();
 		},
 		Arccsc: function(X) {
-			return Mathematics.Arcsin(Mathematics.Divide(1, X));
+			return Mathematics.Arcsin(Mathematics.Divide(1, X)).Generalize();
 		},
 		Arccot: function(X) {
-			return Mathematics.Arctan(Mathematics.Divide(1, X));
+			return Mathematics.Arctan(Mathematics.Divide(1, X)).Generalize();
 		},
 
 		// Hyperbolic functions
 		Sinh: function(X) {
-			return Mathematics.Divide(Mathematics.Subtract(Mathematics.Exp(X), Mathematics.Exp(Mathematics.Multiply(X, -1))), 2);
+			return Mathematics.Divide(Mathematics.Subtract(Mathematics.Exp(X), Mathematics.Exp(Mathematics.Multiply(X, -1))), 2).Generalize();
 		},
 		Cosh: function(X) {
-			return Mathematics.Divide(Mathematics.Add(Mathematics.Exp(X), Mathematics.Exp(Mathematics.Multiply(X, -1))), 2);
+			return Mathematics.Divide(Mathematics.Add(Mathematics.Exp(X), Mathematics.Exp(Mathematics.Multiply(X, -1))), 2).Generalize();
 		},
 		Tanh: function(X) {
-			return Mathematics.Divide(Mathematics.Sinh(X), Mathematics.Cosh(X));
+			return Mathematics.Divide(Mathematics.Sinh(X), Mathematics.Cosh(X)).Generalize();
 		},
 		Sech: function(X) {
-			return Mathematics.Divide(1, Mathematics.Cosh(X));
+			return Mathematics.Divide(1, Mathematics.Cosh(X)).Generalize();
 		},
 		Csch: function(X) {
-			return Mathematics.Divide(1, Mathematics.Sinh(X));	
+			return Mathematics.Divide(1, Mathematics.Sinh(X)).Generalize();	
 		},
 		Coth: function(X) {
-			return Mathematics.Divide(1, Mathematics.Tanh(X));
+			return Mathematics.Divide(1, Mathematics.Tanh(X)).Generalize();
 		},
 		Arcsinh: function(X) {
-			return Mathematics.Ln(Mathematics.Add(X, Mathematics.Root(Mathematics.Add(Mathematics.Square(X), 1))));
+			return Mathematics.Ln(Mathematics.Add(X, Mathematics.Root(Mathematics.Add(Mathematics.Square(X), 1)))).Generalize();
 		},
 		Arccosh: function(X) {
-			return Mathematics.Ln(Mathematics.Add(X, Mathematics.Root(Mathematics.Subtract(Mathematics.Square(X), 1))));
+			return Mathematics.Ln(Mathematics.Add(X, Mathematics.Root(Mathematics.Subtract(Mathematics.Square(X), 1)))).Generalize();
 		},
 		Arctanh: function(X) {
-			return Mathematics.Divide(Mathematics.Ln(Mathematics.Divide(Mathematics.Add(1, X), Mathematics.Subtract(1, X))), 2);
+			return Mathematics.Divide(Mathematics.Ln(Mathematics.Divide(Mathematics.Add(1, X), Mathematics.Subtract(1, X))), 2).Generalize();
 		},
 		Arcsech: function(X) {
-			return Mathematics.Arccosh(Mathematics.Divide(1, X));
+			return Mathematics.Arccosh(Mathematics.Divide(1, X)).Generalize();
 		},
 		Arccsch: function(X) {
-			return Mathematics.Arcsinh(Mathematics.Divide(1, X));
+			return Mathematics.Arcsinh(Mathematics.Divide(1, X)).Generalize();
 		},
 		Arccoth: function(X) {
-			return Mathematics.Arctanh(Mathematics.Divide(1, X));
+			return Mathematics.Arctanh(Mathematics.Divide(1, X)).Generalize();
 		},
 
 		// Exponent and logarithm
 		Exp: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Exp(X.RealPart()) * Mathematics.Cos(X.ImaginaryPart()), Mathematics.Exp(X.RealPart()) * Mathematics.Sin(X.ImaginaryPart())) : Math.exp(X);
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Exp(X.RealPart()) * Mathematics.Cos(X.ImaginaryPart()), Mathematics.Exp(X.RealPart()) * Mathematics.Sin(X.ImaginaryPart())).Generalize() : Math.exp(X);
 		},
 		Log: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(Mathematics.Ln(10), 0)) : Math.log(X) / Math.log(10);
+			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(Mathematics.Ln(10), 0)).Generalize() : Math.log(X) / Math.log(10);
 		},
 		Lb: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(Mathematics.Ln(2), 0)) : Math.log(X) / Math.log(2);
+			return Mathematics.isComplex(X) ? Mathematics.Ln(X).Divide(Mathematics.Complex(Mathematics.Ln(2), 0)).Generalize() : Math.log(X) / Math.log(2);
 		},
 		Ln: function(X) {
-			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ln(Mathematics.Abs(X)), Math.atan2(X.ImaginaryPart(), X.RealPart())) : (X < 0 ? Mathematics.Complex(Mathematics.Ln(-X), Mathematics.PI) : Math.log(X));
+			return Mathematics.isComplex(X) ? Mathematics.Complex(Mathematics.Ln(Mathematics.Abs(X)), Math.atan2(X.ImaginaryPart(), X.RealPart())).Generalize() : (X < 0 ? Mathematics.Complex(Mathematics.Ln(-X), Mathematics.PI) : Math.log(X));
 		},
 
 		// Sequence (Progression)
@@ -215,7 +224,7 @@
 				}
 			}
 
-			return Summation.Realize ? Summation.Realize() : Summation;
+			return Summation.Generalize();
 		},
 		Product: function(From, To, Fx) {
 			var Production = Mathematics.Complex(1, 0);
@@ -232,20 +241,20 @@
 				}
 			}
 
-			return Production.Realize ? Production.Realize() : Production;
+			return Production.Generalize();
 		},
 
 		// Extra functions
 		Sinc: function(X) {
 			X = Mathematics.isComplex(X) && X.Realize ? X.Realize() : X;
 
-			return X == 0 ? 1 : Mathematics.Divide(Mathematics.Sin(X), X);
+			return X == 0 ? 1 : Mathematics.Divide(Mathematics.Sin(X), X).Generalize();
 		},
 		Zeta: function(S) {
-			return S > 1 ? (S == Infinity ? 1 : Mathematics.Sum(1, Infinity, function(N) { return Mathematics.Divide(1, Mathematics.Power(N, S)) })) : undefined;
+			return S > 1 ? (S == Infinity ? 1 : Mathematics.Sum(1, Infinity, function(N) { return Mathematics.Divide(1, Mathematics.Power(N, S)) }).Generalize()) : undefined;
 		},
 		Gamma: function(T) {
-			return Mathematics.isInteger(T) ? Mathematics.Product(1, Mathematics.Subtract(T, 1), function(N) { return N }) : Mathematics.Divide(Mathematics.Product(1, Infinity, function(N) { return Mathematics.Divide(Mathematics.Power(Mathematics.Add(1, Mathematics.Divide(1, N)), T), Mathematics.Add(1, Mathematics.Divide(T, N))) }), T);
+			return Mathematics.isInteger(T) ? Mathematics.Product(1, Mathematics.Subtract(T, 1), function(N) { return N }) : Mathematics.Divide(Mathematics.Product(1, Infinity, function(N) { return Mathematics.Divide(Mathematics.Power(Mathematics.Add(1, Mathematics.Divide(1, N)), T), Mathematics.Add(1, Mathematics.Divide(T, N))) }), T).Generalize();
 		},
 		Factorial: function(N) {
 			return Mathematics.Gamma(Mathematics.Add(N, 1));
@@ -273,16 +282,16 @@
 
 		// Point
 		Distance: function(P, Q) {
-			return Mathematics.Root(Mathematics.Square(Mathematics.Subtract(Q[0], P[0])) + Mathematics.Square(Mathematics.Subtract(Q[1], P[1])));
+			return Mathematics.Root(Mathematics.Square(Mathematics.Subtract(Q[0], P[0])) + Mathematics.Square(Mathematics.Subtract(Q[1], P[1]))).Generalize();
 		},
 		Midpoint: function(P, Q) {
-			return [Mathematics.Divide(Mathematics.Add(Q[0], P[0]), 2), Mathematics.Divide(Mathematics.Add(Q[1], P[1]), 2)];
+			return [Mathematics.Divide(Mathematics.Add(Q[0], P[0]), 2).Generalize(), Mathematics.Divide(Mathematics.Add(Q[1], P[1]), 2).Generalize()];
 		},
 
 		// Matrix
 		Matrix: function(Values) {
 			var Matrix = function(Values) {
-				var ValueSet = Values, Rows = Values.length, Columns = Values[0].length;
+				var ValueSet = Values, Rows = Values.length, Columns = Values[0].length ? Values[0].length : 1;
 
 				this.Rows = Rows;
 				this.Columns = Columns;
@@ -294,13 +303,7 @@
 				};
 
 				this.RowVector = function(Row) {
-					var Vector = [];
-
-					for(var ColumnIterator = 1; ColumnIterator <= Columns; ColumnIterator++) {
-						Vector.push(this.Item(Row, ColumnIterator));
-					}
-
-					return Mathematics.Matrix(Vector);
+					return Mathematics.Matrix([ValueSet[Row - 1]]);
 				};
 
 				this.ColumnVector = function(Column) {
@@ -314,11 +317,17 @@
 				};
 
 				this.ScalarMultiply = function(Scalar) {
+					var Values = [];
+
 					for(var RowIterator = 0; RowIterator < Rows; RowIterator++) {
+						Values[RowIterator] = [];
+
 						for(var ColumnIterator = 0; ColumnIterator < Columns; ColumnIterator++) {
-							ValueSet[RowIterator][ColumnIterator] = Mathematics.Multiply(ValueSet[RowIterator][ColumnIterator], Scalar);
+							Values[RowIterator].push(Mathematics.Multiply(ValueSet[RowIterator][ColumnIterator], Scalar).Generalize());
 						}
 					}
+
+					return Mathematics.Matrix(Values);
 				};
 
 				this.Transpose = function() {
@@ -346,7 +355,7 @@
 								Induction[RowIterator][ColumnIterator] = 0;
 
 								for(var Iterator = 1; Iterator <= Columns; Iterator++) {
-									Induction[RowIterator][ColumnIterator] = Mathematics.Add(Mathematics.Multiply(this.Item(RowIterator + 1, Iterator), Transposal.Item(ColumnIterator + 1, Iterator)));
+									Induction[RowIterator][ColumnIterator] = Mathematics.Add(Induction[RowIterator][ColumnIterator], Mathematics.Multiply(this.Item(RowIterator + 1, Iterator), Transposal.Item(ColumnIterator + 1, Iterator)));
 								}
 							}
 						}
@@ -396,21 +405,19 @@
 						return Mathematics.Multiply(Mathematics.Power(-1, Row + Column), this.Minor(Row, Column));
 					};
 
-					this.Trace = function(Matrix) {
+					this.Trace = function() {
 						var Trace = 0;
 
 						for(var Iterator = 1; Iterator <= Rows; Iterator++) {
 							Trace = Mathematics.Add(Trace, this.Item(Iterator, Iterator));
 						}
 
-						return Trace;
+						return Trace.Generalize();
 					};
 
 					this.Determinant = function() {
 						if(Rows == 1) {
-							return this.Item(1, 1);
-						} else if(Rows == 2) {
-							return this.Item(1, 1) * this.Item(2, 2) - this.Item(1, 2) * this.Item(2, 1);
+							return this.Item(1, 1).Generalize();
 						} else {
 							return Mathematics.Sum(1, Rows, (function(Matrix) {
 								return function(I) { return Mathematics.Multiply(Matrix.Item(I, 1), Matrix.Cofactor(I, 1)) }
@@ -420,10 +427,7 @@
 
 					if(this.Determinant() != 0) {
 						this.InverseMatrix = function() {
-							var InverseMatrix = this.Adjugate();
-							InverseMatrix.ScalarMultiply(Mathematics.Divide(1, this.Determinant()));
-
-							return InverseMatrix;
+							return this.Adjugate().ScalarMultiply(Mathematics.Divide(1, this.Determinant()));
 						};
 					}
 				}
@@ -483,6 +487,10 @@
 					}
 				}
 
+				this.Generalize = function() {
+					return this.Realize ? this.Realize() : this;
+				};
+
 				this.Add = function(Complex) {
 					return Mathematics.Complex(RealPart + Complex.RealPart(), ImaginaryPart + Complex.ImaginaryPart());
 				};
@@ -528,6 +536,47 @@
 		},
 		RepeatedCombination: function(N, R) {
 			return Mathematics.Combination(Mathematics.Subtract(Mathematics.Add(N, R), 1), R);
+		},
+
+		// Vector
+		Vector: function(Components) {
+			var Vector = function(Matrix) {
+				var Matrix = Mathematics.Matrix([Components]);
+
+				this.Matrix = function() {
+					return Mathematics.Matrix([Matrix.RowVector(1).Serialize()]);
+				};
+
+				this.Length = function() {
+					var Length = 0;
+
+					for(var ColumnIterator = 1; ColumnIterator <= Matrix.Columns; ColumnIterator++) {
+						Length = Mathematics.Add(Length, Mathematics.Square(Matrix.Item(1, ColumnIterator)));
+					}
+
+					return Mathematics.Root(Length);
+				};
+
+				this.Direction = function() {
+					//return Direction;
+				};
+
+				this.InnerProduct = this.ScalarProduct = this.DotProduct = function(Vector) {
+					return Matrix.Transpose().Multiply(Vector.Matrix()).Trace();
+				};
+
+				if(Matrix.Columns == 3 || Matrix.Columns == 7) {
+					this.OuterProduct = this.VectorProduct = this.CrossProduct = function(Vector) {
+						return Matrix.Columns == 3 ? Mathematics.Vector([Mathematics.Subtract(Mathematics.Multiply(Matrix.Item(1, 2), Vector.Matrix().Item(1, 3)), Mathematics.Multiply(Matrix.Item(1, 3), Vector.Matrix().Item(1, 2))), Mathematics.Subtract(Mathematics.Multiply(Matrix.Item(1, 3), Vector.Matrix().Item(1, 1)), Mathematics.Multiply(Matrix.Item(1, 1), Vector.Matrix().Item(1, 3))), Mathematics.Subtract(Mathematics.Multiply(Matrix.Item(1, 1), Vector.Matrix().Item(1, 2)), Mathematics.Multiply(Matrix.Item(1, 2), Vector.Matrix().Item(1, 1)))]) : Mathematics.Vector([Mathematics.Subtract(Mathematics.Add(Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 2), Vector.Matrix().Item(1, 3)), Mathematics.Multiply(Matrix.Item(1, 4), Vector.Matrix().Item(1, 5))), Mathematics.Multiply(Matrix.Item(1, 7), Vector.Matrix().Item(1, 6))), Mathematics.Add(Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 3), Vector.Matrix().Item(1, 2)), Mathematics.Multiply(Matrix.Item(1, 5), Vector.Matrix().Item(1, 4))), Mathematics.Multiply(Matrix.Item(1, 6), Vector.Matrix().Item(1, 7)))), Mathematics.Subtract(Mathematics.Add(Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 3), Vector.Matrix().Item(1, 1)), Mathematics.Multiply(Matrix.Item(1, 4), Vector.Matrix().Item(1, 6))), Mathematics.Multiply(Matrix.Item(1, 5), Vector.Matrix().Item(1, 7))), Mathematics.Add(Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 1), Vector.Matrix().Item(1, 3)), Mathematics.Multiply(Matrix.Item(1, 6), Vector.Matrix().Item(1, 4))), Mathematics.Multiply(Matrix.Item(1, 7), Vector.Matrix().Item(1, 5)))), Mathematics.Subtract(Mathematics.Add(Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 1), Vector.Matrix().Item(1, 2)), Mathematics.Multiply(Matrix.Item(1, 2), Vector.Matrix().Item(1, 1))), Mathematics.Multiply(Matrix.Item(1, 4), Vector.Matrix().Item(1, 7))), Mathematics.Add(Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 5), Vector.Matrix().Item(1, 6)), Mathematics.Multiply(Matrix.Item(1, 6), Vector.Matrix().Item(1, 5))), Mathematics.Multiply(Matrix.Item(1, 7), Vector.Matrix().Item(1, 4)))), Mathematics.Subtract(Mathematics.Add(Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 5), Vector.Matrix().Item(1, 1)), Mathematics.Multiply(Matrix.Item(1, 6), Vector.Matrix().Item(1, 2))), Mathematics.Multiply(Matrix.Item(1, 7), Vector.Matrix().Item(1, 3))), Mathematics.Add(Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 1), Vector.Matrix().Item(1, 5)), Mathematics.Multiply(Matrix.Item(1, 2), Vector.Matrix().Item(1, 6))), Mathematics.Multiply(Matrix.Item(1, 3), Vector.Matrix().Item(1, 7)))), Mathematics.Subtract(Mathematics.Add(Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 1), Vector.Matrix().Item(1, 4)), Mathematics.Multiply(Matrix.Item(1, 2), Vector.Matrix().Item(1, 7))), Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 3), Vector.Matrix().Item(1, 6)), Mathematics.Multiply(Matrix.Item(1, 4), Vector.Matrix().Item(1, 1)))), Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 6), Vector.Matrix().Item(1, 3)), Mathematics.Multiply(Matrix.Item(1, 7), Vector.Matrix().Item(1, 2)))), Mathematics.Subtract(Mathematics.Add(Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 1), Vector.Matrix().Item(1, 7)), Mathematics.Multiply(Matrix.Item(1, 2), Vector.Matrix().Item(1, 4))), Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 3), Vector.Matrix().Item(1, 5)), Mathematics.Multiply(Matrix.Item(1, 4), Vector.Matrix().Item(1, 2)))), Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 5), Vector.Matrix().Item(1, 3)), Mathematics.Multiply(Matrix.Item(1, 7), Vector.Matrix().Item(1, 1)))), Mathematics.Subtract(Mathematics.Add(Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 4), Vector.Matrix().Item(1, 3)), Mathematics.Multiply(Matrix.Item(1, 1), Vector.Matrix().Item(1, 6))), Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 3), Vector.Matrix().Item(1, 4)), Mathematics.Multiply(Matrix.Item(1, 2), Vector.Matrix().Item(1, 5)))), Mathematics.Add(Mathematics.Multiply(Matrix.Item(1, 6), Vector.Matrix().Item(1, 1)), Mathematics.Multiply(Matrix.Item(1, 5), Vector.Matrix().Item(1, 2))))]);
+					};
+				}
+
+				this.ScalarMultiply = function(Scalar) {
+					return Mathematics.Vector(this.Matrix().ScalarMultiply(Scalar).Serialize());
+				};
+			};
+
+			return new Vector(Components);
 		}
 	};
 
@@ -536,7 +585,7 @@
 	Mathematics.PI = Mathematics.Sum(0, Infinity, function(K) { return Mathematics.Power(16, -K) * (4 / (8 * K + 1) - 2 / (8 * K + 4) - 1 / (8 * K + 5) - 1 / (8 * K + 6)) });
 	Mathematics.PHI = (1 + Mathematics.Root(5)) / 2;
 
-	// (Extend) Linear algebra - Matrix
+	// Matrix extension
 	Mathematics.Matrix.Identity = function(Size) {
 		var Values = [];
 
@@ -564,11 +613,6 @@
 
 		return Mathematics.Matrix(Values);
 	};
-
-	// Extend to default classes
-	Number.prototype.Stringify = function() {
-		return this.toString();
-	}
 
 	window.Mathematics = Mathematics;
 })();
