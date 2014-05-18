@@ -1,6 +1,5 @@
 /**
  * Mathematics library for Javascript
- * Version PROTOTYPE
  *
  * Written by Heaven(Cichol Gricenchos)
  * License under the MIT License
@@ -665,4 +664,6 @@
 	};
 
 	GlobalObject.Mathematics = Mathematics;
-})(self);
+})((function() {
+	return this.window ? this.window : this.global;
+})());
