@@ -2,7 +2,7 @@
 This project is extension of mathematical calculation for JavaScript.
 
 ## How to install
-Just link ++math.js++ file.
+Just link **math.js** file.
 
 - in **HTML**
 ```html
@@ -18,7 +18,7 @@ require('math.js');
 Check [Wiki](https://github.com/Hx0A5F/Mathematics/wiki).
 
 ## License
-This project is licensed under the ++MIT License.++
+This project is licensed under the **MIT License**
 
 ```text
 The MIT License (MIT)
