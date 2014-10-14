@@ -630,9 +630,27 @@
 	};
 
 	// Mathematical constants
+	
+	/*
+		Added few more constants... 
+		Khinchin-Levy constant 
+		Plouffe's Gamma Constant 
+		Catalan's constant 
+		Apery's constant
+		Riemann's Zeta Four
+		Grothendieck constant
+		
+	*/
+	
 	Mathematics.E = Mathematics.Sum(0, Infinity, function(N) { return 1 / Mathematics.Factorial(N) });
 	Mathematics.PI = Mathematics.Sum(0, Infinity, function(K) { return Mathematics.Power(16, -K) * (4 / (8 * K + 1) - 2 / (8 * K + 4) - 1 / (8 * K + 5) - 1 / (8 * K + 6)) });
 	Mathematics.PHI = (1 + Mathematics.Root(5)) / 2;
+	Mathematics.KHINCHINLEVY = Math.pow(Mathematics.PI, 2) / (12 * Mathematics.Ln(2)));
+	Mathematics.PLOUFFE = Mathematics.Arctan(1 / 2) / Mathematics.PI;
+	Mathematics.CATALAN = Mathematics.Sum(0, Infinity, function(N) { return Math.pow((-1), N) / Math.pow((2 * N + 1, 2) });
+	Mathematics.APERY = Mathematics.Sum(0, Infinity, function(N) { return 1 / Math.pow(N, 3) });
+	Mathematics.ZETAFOUR = Mathematics.Sum(0, Infinity, function(N) { return 1 / Math.pow(N, 4) });
+	Mathematics.GROTHENDIECK = Mathematics.PI / (2 * Mathematics.Log(1 + Mathematics.Root(2)))
 
 	// Matrix extension
 	Mathematics.Matrix.Identity = function(Size) {
