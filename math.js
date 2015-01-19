@@ -294,6 +294,9 @@
 		Degree: function(Radian) {
 			return Radian * 180 / Mathematics.PI;
 		},
+		SquareDegree: function(Radian) {
+			return Radian * (129600 / Mathematics.PI);
+		},
 
 		// Point
 		Distance: function(P, Q) {
