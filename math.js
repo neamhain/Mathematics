@@ -653,7 +653,12 @@
 	Mathematics.CATALAN = Mathematics.Sum(0, Infinity, function(N) { return Math.pow((-1), N) / Math.pow((2 * N + 1, 2) });
 	Mathematics.APERY = Mathematics.Sum(0, Infinity, function(N) { return 1 / Math.pow(N, 3) });
 	Mathematics.ZETAFOUR = Mathematics.Sum(0, Infinity, function(N) { return 1 / Math.pow(N, 4) });
-	Mathematics.GROTHENDIECK = Mathematics.PI / (2 * Mathematics.Log(1 + Mathematics.Root(2)))
+	Mathematics.GROTHENDIECK = Mathematics.PI / (2 * Mathematics.Log(1 + Mathematics.Root(2)));
+	Mathematics.PLATONICHEIGHTEDGE = Mathematics.Root(6) / 3;
+	Mathematics.PLATONICSEDGESQUARE = Mathematics.Root(3);
+	Mathematics.PLATONICHEDGECUBIC = Mathematics.Root(2) / 12;
+	Mathematics.CIRCUMRADIUS = Mathematics.Root(6) / 4;
+	Mathematics.MIDRADIUS = 1 / Mathematics.Root(8);
 
 	// Matrix extension
 	Mathematics.Matrix.Identity = function(Size) {
